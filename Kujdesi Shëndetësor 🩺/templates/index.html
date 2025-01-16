@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shëndeti dhe Dieta</title>
+  <!-- Shto font nga Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .input-group i {
+      margin-right: 8px;
+      font-size: 1.2em;
+      color: #4caf50;
+    }
+    .suggestion {
+      margin-top: 10px;
+      background-color: #f9f9f9;
+      padding: 10px;
+      border-left: 4px solid #4caf50;
+    }
+    .suggestion strong {
+      color: #4caf50;
+    }
+    button {
+      background-color: #4caf50; /* Ngjyrë e gjelbër për butonin */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s ease-in-out; /* Kalime të buta për ngjyrën dhe transformimin */
+    }
+    
+    /* Efekti hover për butonin */
+    button:hover {
+      background-color:rgb(81, 134, 210); /* Ngjyrë portokalli për hover që bie më shumë në sy */
+      color: white; /* Ngjyra e tekstit mbetet e bardhë për kontrast të mirë */
+      transform: scale(1.1); /* Efekt i vogël zmadhimi për ta theksuar butonin */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shtojmë hijen për më shumë theksim */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shëndeti dhe Dieta</h1>
+    <div>
+      <!-- Input për Peshën -->
+      <div class="input-group">
+        <i class="fas fa-weight"></i>
+        <input id="pesha" type="number" placeholder="Pesha (kg)" />
+      </div>
+      <!-- Input për Gjatësinë -->
+      <div class="input-group">
+        <i class="fas fa-ruler-vertical"></i>
+        <input id="gjatesia" type="number" placeholder="Gjatësia (m)" />
+      </div>
+      <!-- Input për Moshën -->
+      <div class="input-group">
+        <i class="fas fa-user"></i>
+        <input id="mosha" type="number" placeholder="Mosha (vjet)" />
+      </div>
+      <button onclick="calculateBMI()">Llogarit BMI</button>
+      <p id="bmi-result"></p>
+      <p id="bmi-category"></p>
+      <div id="bmi-suggestions"></div>
+    </div>
+    <div>
+      <h2>Grafiku i BMI</h2>
+      <canvas id="bmiChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <script>
+    async function renderBMIChart(gjatesia) {
+      const response = await fetch(`/bmi_chart_data?gjatesia=${gjatesia}`);
+      const data = await response.json();
+
+      const ctx = document.getElementById('bmiChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: data.pesha,
+          datasets: [{
+            label: 'BMI në bazë të peshës',
+            data: data.bmi,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderWidth: 2,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Pesha (kg)'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'BMI'
+              },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function calculateBMI() {
+      const pesha = document.getElementById("pesha").value;
+      const gjatesia = document.getElementById("gjatesia").value;
+      const mosha = document.getElementById("mosha").value;
+
+      fetch("/calculate_bmi", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pesha: parseFloat(pesha), gjatesia: parseFloat(gjatesia), mosha: parseInt(mosha) }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.bmi) {
+            document.getElementById("bmi-result").innerText = `BMI juaj është: ${data.bmi}`;
+            document.getElementById("bmi-category").innerText = `Kategoria: ${data.category}`;
+            document.getElementById("bmi-suggestions").innerHTML = `
+              <div class="suggestion">
+                <strong>Sugjerime:</strong><br>
+                <i class="fas fa-utensils"></i> Dieta: ${data.suggestions.dieta}<br>
+                <i class="fas fa-dumbbell"></i> Ushtrime: ${data.suggestions.ushtrime}
+              </div>
+            `;
+            renderBMIChart(gjatesia);
+          } else {
+            document.getElementById("bmi-result").innerText = "Ka ndodhur një gabim.";
+          }
+        })
+        .catch((error) => console.error("Gabim:", error));
+    }
+  </script>
+</body>
+</html>

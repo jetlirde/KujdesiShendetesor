@@ -1,0 +1,120 @@
+body {
+  font-family: Arial, sans-serif;
+  background-image: url('bck7.jpg'); /* Vendosni URL e imazhit tuaj këtu */
+  background-size: cover; /* Imazhi mbulon tërë ekranin */
+  background-position: center;
+  background-attachment: fixed; /* Imazhi qëndron në vend kur shfletuesi rrotullohet */
+  padding: 20px;
+  margin: 0;
+}
+h1 {
+  font-family: 'Lora', serif; /* Zgjidhni fontin që preferoni nga Google Fonts */
+  font-size: 2.5em; /* Rritni madhësinë e fontit për tituj të mëdhenj */
+  text-align: center; /* Titulli do të jetë i centruar */
+  color: #333; /* Ngjyra e titullit për kontrast të mirë me background-in */
+  font-weight: bold; /* Bëni tekstin të dallohet */
+  letter-spacing: 2px; /* Shtoni hapësirë ndërmjet shkronjave për efekt të bukur */
+  text-transform: uppercase; /* Mund të përdorni uppercase për efekt më të fuqishëm */
+}
+
+
+.container {
+  width: 80%; /* Përdorim më shumë hapësirë në ekranet e vogla */
+  margin: auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.9); /* Sfond i bardhë me pak transparencë */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="number"], input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+button {
+  background-color: #4caf50; /* Ngjyrë e gjelbër për butonin */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s ease-in-out; /* Shtoni kalim të butë për ngjyrën dhe transformimin */
+}
+
+/* Efekti hover për butonin */
+button:hover {
+  background-color: #45a049; /* Ngjyrë më e errët gjatë hover-it */
+  transform: scale(1.05); /* Shtoni efektin e rritjes për ta bërë butonin më tërheqës */
+}
+
+/* Efektet për butonat dhe inputet */
+button:hover, .input-group input:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+.loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive Design for Mobile Devices */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    width: 90%; /* Rrisim përqindjen për pajisjet mobile */
+    padding: 15px;
+  }
+
+  input[type="number"], input[type="text"] {
+    padding: 8px;
+    font-size: 14px; /* Përdorim një font më të vogël për inputet */
+  }
+
+  button {
+    width: 100%; /* Butoni mbush tërë gjerësinë në pajisjet mobile */
+    padding: 15px;
+    font-size: 16px; /* Font më të madh për butonin */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    width: 100%; /* Përshtatje më e madhe për pajisjet me ekrane shumë të vogla */
+    padding: 10px;
+  }
+
+  input[type="number"], input[type="text"] {
+    font-size: 12px; /* Font më i vogël për ekrane të vogla */
+  }
+
+  button {
+    padding: 12px;
+    font-size: 14px; /* Font më i vogël për butonin në pajisjet më të vogla */
+  }
+}
